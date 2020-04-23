@@ -48,7 +48,7 @@ def analytics():
         data["Negative"][dateRanges.index(range)] += negativeTweets[date]
     source = ColumnDataSource(data=data)
     maxValue = max(max(data["Positive"]), max(data["Negative"]))
-    p = figure(x_range=dateRanges, y_range=(0, int(1.1 * maxValue)), plot_height=600, plot_width=900, title="No. of Positive & Negative tweets by week", toolbar_location=None, tools="")
+    p = figure(x_range=dateRanges, y_range=(0, int(1.1 * maxValue)), plot_height=600, plot_width=800, title="No. of Positive & Negative tweets by week", toolbar_location=None, tools="")
     p.vbar(x=dodge("dateRanges", -0.25, range=p.x_range), top="Positive", width=0.2, source=source, color="#718dbf", legend_label="Positive")
     p.vbar(x=dodge("dateRanges", 0.0, range=p.x_range), top="Negative", width=0.2, source=source, color="#e84d60", legend_label="Negative")
     p.x_range.range_padding = 0.1
@@ -70,7 +70,7 @@ def analytics():
         data2["Negative"].append(negativeTweets[date])
     maxValue = max(max(data2["Positive"]), max(data2["Negative"]))
     uniqueDates = [datetime.strptime(date, '%Y-%m-%d') for date in uniqueDates]
-    p2 = figure(y_range=(0, int(1.1 * maxValue)), x_axis_type='datetime', plot_height=600, plot_width=900, title="No. of Positive & Negative tweets by day", toolbar_location=None, tools="")
+    p2 = figure(y_range=(0, int(1.1 * maxValue)), x_axis_type='datetime', plot_height=600, plot_width=800, title="No. of Positive & Negative tweets by day", toolbar_location=None, tools="")
     p2.line(uniqueDates, data2["Positive"], legend="Positive", line_color=colors[2], line_width = 3, alpha=0.8)
     p2.line(uniqueDates, data2["Negative"], legend="Negative", line_color=colors[1], line_width = 3, alpha=0.8)
     p2.legend.location = "top_left"
