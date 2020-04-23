@@ -7,16 +7,37 @@
 
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>COVID-19 Tweet Analysis</title>
-    <link href="http://cdn.pydata.org/bokeh/release/bokeh-2.0.2.min.css" rel="stylesheet">
-    <link href="http://cdn.pydata.org/bokeh/release/bokeh-widgets-2.0.2.min.css" rel="stylesheet">
-  </head>
-  <body>
-    <h1>Sentiment Analysis</h1>
-    {{ sent_div|safe }}
-    <script src="http://cdn.pydata.org/bokeh/release/bokeh-2.0.2.min.js"></script>
-    <script src="http://cdn.pydata.org/bokeh/release/bokeh-widgets-2.0.2.min.js"></script>
-    {{ sent_script|safe }}
-  </body>
+    <head>
+        <style>
+            #div1 {
+                display: inline-block;
+            }
+            #div2 {
+                display: inline-block;
+            }
+            /* .aParent div {
+                float: left;
+                clear: none; 
+            } */
+        </style>
+        <title>COVID-19 Tweet Analysis</title>
+        <link href="http://cdn.pydata.org/bokeh/release/bokeh-2.0.1.min.css" rel="stylesheet">
+        <link href="http://cdn.pydata.org/bokeh/release/bokeh-widgets-2.0.1.min.css" rel="stylesheet">
+    </head>
+    <body>
+        <h1 style="text-align:center">COVID-19 Twitter Data Analysis Using Spark</h1>
+        <div>
+            <h1>Sentiment of Tweets</h1>
+            <div id="div1">
+                {{ sent_div2|safe }}
+                {{ sent_script2|safe }}
+            </div>
+            <div id="div2">
+                {{ sent_div|safe }}
+                {{ sent_script|safe }}
+            </div>
+        </div>
+        <script src="http://cdn.pydata.org/bokeh/release/bokeh-2.0.1.min.js"></script>
+        <script src="http://cdn.pydata.org/bokeh/release/bokeh-widgets-2.0.1.min.js"></script>
+    </body>
 </html>
