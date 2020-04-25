@@ -1,11 +1,3 @@
-<!--{%for item in data["Items"] %}
-<tr>
-    <td>{{item["week"]}}</td>
-    <td>{{item["cases"]}}</td>
-</tr>
-{% endfor %}-->
-
-<!DOCTYPE html>
 <html>
     <head>
         <style>
@@ -31,6 +23,12 @@
             <div id="div2">
                 {{ sent_div|safe }}
                 {{ sent_script|safe }}
+            </div>
+        </div>
+        <div>
+            <div id="div3">
+                {{ sent_div3|safe }}
+                {{ sent_script3|safe }}
             </div>
         </div>
         <script src="http://cdn.pydata.org/bokeh/release/bokeh-2.0.2.min.js"></script>

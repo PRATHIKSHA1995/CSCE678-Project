@@ -10,7 +10,9 @@ from datetime import datetime, timedelta
 from flask import Flask, render_template
 from bokeh.models import DatetimeTickFormatter
 from boto3.dynamodb.conditions import Key, Attr
-from bokeh.models import ColumnDataSource, NumeralTickFormatter, HoverTool
+from bokeh.models import ColumnDataSource, NumeralTickFormatter, HoverTool, LinearColorMapper, ColorBar, BasicTicker, PrintfTickFormatter
+from bokeh.palettes import Viridis256
+from bokeh.transform import transform
 
 app = Flask(__name__)
 
@@ -82,5 +84,30 @@ def analytics():
     p2.xaxis.formatter = DatetimeTickFormatter(days=["%Y-%m-%d"])
     p2.add_tools(HoverTool(tooltips=[('Date', "$x{%F}"), ('No. of tweets', '$y{(0 a)}')], formatters={'$x': 'datetime'}, mode='vline'))
     script2, div2 = components(p2)
+
+    response = table.query(KeyConditionExpression=Key('key').eq('topic-modelling-frequency-weight'))["Items"][0]
+    topics10 = json.loads(response["topics-10"])
+    res = topics10["5"]
+    data3 = {"words": [], "weights": [], "frequencies": [], "scaled": []}
+    for key in res:
+        print(key)
+        data3["words"].append(key)
+        data3["weights"].append(res[key][1])
+        if res[key][0] is None or str(res[key][0]) == "null":
+            data3["frequencies"].append('0')
+        else:
+            data3["frequencies"].append(str(res[key][0][0]))
+        data3["scaled"].append(res[key][1]*2000)
+    zipped = list(zip(data3["frequencies"], data3["weights"], data3["words"]))
+    zipped.sort()
+    data3["frequencies"], data3["weights"], data3["words"] = zip(*zipped)
+    source = ColumnDataSource(data=data3)
+    p3 = figure(x_range = data3["frequencies"], y_range = data3["words"], plot_height=600, plot_width=800)
+    color_mapper = LinearColorMapper(palette = Viridis256, low = min(data3["weights"]), high = max(data3["weights"]))
+    color_bar = ColorBar(color_mapper = color_mapper, location = (0, 0),ticker = BasicTicker())
+    p3.add_layout(color_bar, 'right')
+    p3.scatter(x = 'frequencies', y = 'words', size = 'scaled', fill_color = transform('weights', color_mapper), source = source)
+    p3.add_tools(HoverTool(tooltips = [('weights', '$x')]))
+    script3, div3 = components(p3)
     print(print(bokeh.__version__))
-    return render_template('index.html', sent_div=div, sent_script=script, sent_div2=div2, sent_script2=script2, data="")
+    return render_template('index.html', sent_div=div, sent_script=script, sent_div2=div2, sent_script2=script2, sent_script3=script3, sent_div3=div3, data="")
