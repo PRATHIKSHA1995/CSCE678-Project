@@ -20,8 +20,8 @@ app = Flask(__name__)
 def analytics():
     uniqueDates = set()
     dynamodb = boto3.resource('dynamodb', region_name='us-west-1')
-    table = dynamodb.Table('spark_analytics')
-    response = table.query(KeyConditionExpression=Key('key').eq('tweet-per-day'))["Items"][0]
+    table = dynamodb.Table('CSCE-678-Spark')
+    response = table.query(KeyConditionExpression=Key('key').eq('historic-tweet-per-day'))["Items"][0]
     negativeTweets = json.loads(response["neg-tweet-dict"])
     positiveTweets = json.loads(response["pos-tweet-dict"])
     negativeTweetDates = set(negativeTweets.keys())
@@ -85,10 +85,10 @@ def analytics():
     p2.add_tools(HoverTool(tooltips=[('Date', "$x{%F}"), ('No. of tweets', '$y{(0 a)}')], formatters={'$x': 'datetime'}, mode='vline'))
     script2, div2 = components(p2)
 
-    response = table.query(KeyConditionExpression=Key('key').eq('topic-modelling-frequency-weight'))["Items"][0]
+    response = table.query(KeyConditionExpression=Key('key').eq('history-topic-modelling-frequency-weight-sw'))["Items"][0]
     topics10 = json.loads(response["topics-10"])
     topics = ["1", "2", "3", "4", "5"]
-    data3 = {"words": [], "weights": [], "frequencies": [], "scaled": []}
+    data3 = {"words": [], "weights": [], "frequencies": [], "scaled": [], "topic": []}
     for topic in topics:
         res = topics10[topic]
         for key in res:
@@ -104,16 +104,17 @@ def analytics():
                 else:
                     data3["frequencies"].append(res[key][0][0])
                 data3["scaled"].append(res[key][1] * 2000)
-    zipped = list(zip(data3["frequencies"], data3["weights"], data3["words"]))
+                data3["topic"].append(str(topic))
+    zipped = list(zip(data3["frequencies"], data3["weights"], data3["words"], data3["scaled"], data3["topic"]))
     zipped.sort()
-    data3["frequencies"], data3["weights"], data3["words"] = zip(*zipped)
+    data3["frequencies"], data3["weights"], data3["words"], data3["scaled"], data3["topic"] = zip(*zipped)
     source = ColumnDataSource(data=data3)
-    p3 = figure(x_range = (0, max(data3["frequencies"])), y_range = data3["words"], plot_height=600, plot_width=800)
+    p3 = figure(x_range = (0, max(data3["frequencies"])), y_range = data3["words"], plot_height=600, plot_width=1600)
     color_mapper = LinearColorMapper(palette = Viridis256, low = min(data3["weights"]), high = max(data3["weights"]))
     color_bar = ColorBar(color_mapper = color_mapper, location = (0, 0),ticker = BasicTicker())
     p3.add_layout(color_bar, 'right')
     p3.scatter(x = 'frequencies', y = 'words', size = 'scaled', fill_color = transform('weights', color_mapper), source = source)
-    p3.add_tools(HoverTool(tooltips = [('weights', '$x')]))
+    p3.add_tools(HoverTool(tooltips = [('Topic', '@topic')]))
     p3.below[0].formatter.use_scientific = False
     script3, div3 = components(p3)
     print(print(bokeh.__version__))
