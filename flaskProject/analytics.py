@@ -19,7 +19,7 @@ app = Flask(__name__)
 @app.route('/')
 def analytics():
     uniqueDates = set()
-    dynamodb = boto3.resource('dynamodb', region_name='us-east-2')
+    dynamodb = boto3.resource('dynamodb', region_name='us-west-1')
     table = dynamodb.Table('spark_analytics')
     response = table.query(KeyConditionExpression=Key('key').eq('tweet-per-day'))["Items"][0]
     negativeTweets = json.loads(response["neg-tweet-dict"])
@@ -87,27 +87,34 @@ def analytics():
 
     response = table.query(KeyConditionExpression=Key('key').eq('topic-modelling-frequency-weight'))["Items"][0]
     topics10 = json.loads(response["topics-10"])
-    res = topics10["5"]
+    topics = ["1", "2", "3", "4", "5"]
     data3 = {"words": [], "weights": [], "frequencies": [], "scaled": []}
-    for key in res:
-        print(key)
-        data3["words"].append(key)
-        data3["weights"].append(res[key][1])
-        if res[key][0] is None or str(res[key][0]) == "null":
-            data3["frequencies"].append('0')
-        else:
-            data3["frequencies"].append(str(res[key][0][0]))
-        data3["scaled"].append(res[key][1]*2000)
+    for topic in topics:
+        res = topics10[topic]
+        for key in res:
+            if key in data3["words"]:
+                index = data3["words"].index(key)
+                data3["weights"][index] = max(data3["weights"][index], res[key][1])
+                data3["scaled"][index] = data3["weights"][index] * 2000
+            else:
+                data3["words"].append(key)
+                data3["weights"].append(res[key][1])
+                if res[key][0] is None or str(res[key][0]) == "null":
+                    data3["frequencies"].append(0)
+                else:
+                    data3["frequencies"].append(res[key][0][0])
+                data3["scaled"].append(res[key][1] * 2000)
     zipped = list(zip(data3["frequencies"], data3["weights"], data3["words"]))
     zipped.sort()
     data3["frequencies"], data3["weights"], data3["words"] = zip(*zipped)
     source = ColumnDataSource(data=data3)
-    p3 = figure(x_range = data3["frequencies"], y_range = data3["words"], plot_height=600, plot_width=800)
+    p3 = figure(x_range = (0, max(data3["frequencies"])), y_range = data3["words"], plot_height=600, plot_width=800)
     color_mapper = LinearColorMapper(palette = Viridis256, low = min(data3["weights"]), high = max(data3["weights"]))
     color_bar = ColorBar(color_mapper = color_mapper, location = (0, 0),ticker = BasicTicker())
     p3.add_layout(color_bar, 'right')
     p3.scatter(x = 'frequencies', y = 'words', size = 'scaled', fill_color = transform('weights', color_mapper), source = source)
     p3.add_tools(HoverTool(tooltips = [('weights', '$x')]))
+    p3.below[0].formatter.use_scientific = False
     script3, div3 = components(p3)
     print(print(bokeh.__version__))
     return render_template('index.html', sent_div=div, sent_script=script, sent_div2=div2, sent_script2=script2, sent_script3=script3, sent_div3=div3, data="")
