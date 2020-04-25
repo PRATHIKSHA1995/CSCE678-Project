@@ -87,7 +87,7 @@ def analytics():
 
     response = table.query(KeyConditionExpression=Key('key').eq('history-topic-modelling-frequency-weight-sw'))["Items"][0]
     topics10 = json.loads(response["topics-10"])
-    topics = ["1", "2", "3", "4", "5"]
+    topics = topics10.keys()
     data3 = {"words": [], "weights": [], "frequencies": [], "scaled": [], "topic": []}
     for topic in topics:
         res = topics10[topic]
@@ -114,7 +114,7 @@ def analytics():
     color_bar = ColorBar(color_mapper = color_mapper, location = (0, 0),ticker = BasicTicker())
     p3.add_layout(color_bar, 'right')
     p3.scatter(x = 'frequencies', y = 'words', size = 'scaled', fill_color = transform('weights', color_mapper), source = source)
-    p3.add_tools(HoverTool(tooltips = [('Topic', '@topic')]))
+    p3.add_tools(HoverTool(tooltips = [('Topic', '@topic'), ('Word', '@words'), ('Frequency', '@frequencies')]))
     p3.below[0].formatter.use_scientific = False
     script3, div3 = components(p3)
     print(print(bokeh.__version__))
