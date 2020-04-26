@@ -35,17 +35,18 @@
     function doSomething() {
 
       var data = '{{datacloud1|safe}}';
+      data = $.parseJSON(data);
 
-      var words_data1 = $.parseJSON(data[0]);
-      var words_data2 = $.parseJSON(data[1]);
-      var words_data3 = $.parseJSON(data[2]);
-      var words_data4 = $.parseJSON(data[3]);
-      var words_data5 = $.parseJSON(data[4]);
-      var words_data6 = $.parseJSON(data[5]);
-      var words_data7 = $.parseJSON(data[6]);
-      var words_data8 = $.parseJSON(data[7]);
-      var words_data9 = $.parseJSON(data[8]);
-      var words_data10 = $.parseJSON(data[9]);
+      var words_data1 = data[0];
+      var words_data2 = data[1];
+      var words_data3 = data[2];
+      var words_data4 = data[3];
+      var words_data5 = data[4];
+      var words_data6 = data[5];
+      var words_data7 = data[6];
+      var words_data8 = data[7];
+      var words_data9 = data[8];
+      var words_data10 = data[9];
 
       $('#word_cloud1').jQCloud(words_data1, {
            width: 600,

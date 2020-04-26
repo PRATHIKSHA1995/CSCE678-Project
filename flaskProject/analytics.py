@@ -216,85 +216,85 @@ def tagcloud():
     for key in topics_100:
         dic = {}
         dic["text"] = key
-        dic["weight"] = int((topics_100[key][1])*1000)
+        dic["weight"] = int((topics_100[key][1])*10000)
         x_list1.append(dic)
 
     x_list2 =[]
     for key in topics_101:
         dic = {}
         dic["text"] = key
-        dic["weight"] = int((topics_101[key][1])*1000)
+        dic["weight"] = int((topics_101[key][1])*10000)
         x_list2.append(dic)
 
     x_list3 =[]
     for key in topics_102:
         dic = {}
         dic["text"] = key
-        dic["weight"] = int((topics_102[key][1])*1000)
+        dic["weight"] = int((topics_102[key][1])*10000)
         x_list3.append(dic)
 
     x_list4 =[]
     for key in topics_103:
         dic = {}
         dic["text"] = key
-        dic["weight"] = int((topics_103[key][1])*1000)
+        dic["weight"] = int((topics_103[key][1])*10000)
         x_list4.append(dic)
 
     x_list5 =[]
     for key in topics_104:
         dic = {}
         dic["text"] = key
-        dic["weight"] = int((topics_104[key][1])*1000)
+        dic["weight"] = int((topics_104[key][1])*10000)
         x_list5.append(dic)
 
     x_list6 =[]
     for key in topics_105:
         dic = {}
         dic["text"] = key
-        dic["weight"] = int((topics_105[key][1])*1000)
+        dic["weight"] = int((topics_105[key][1])*10000)
         x_list6.append(dic) 
 
     x_list7 =[]
     for key in topics_106:
         dic = {}
         dic["text"] = key
-        dic["weight"] = int((topics_106[key][1])*1000)
+        dic["weight"] = int((topics_106[key][1])*10000)
         x_list7.append(dic)
 
     x_list8 =[]
     for key in topics_107:
         dic = {}
         dic["text"] = key
-        dic["weight"] = int((topics_107[key][1])*1000)
+        dic["weight"] = int((topics_107[key][1])*10000)
         x_list8.append(dic)
 
     x_list9 =[]
     for key in topics_108:
         dic = {}
         dic["text"] = key
-        dic["weight"] = int((topics_108[key][1])*1000)
+        dic["weight"] = int((topics_108[key][1])*10000)
         x_list9.append(dic)
 
     x_list10 =[]
     for key in topics_109:
         dic = {}
         dic["text"] = key
-        dic["weight"] = int((topics_109[key][1])*1000)
+        dic["weight"] = int((topics_109[key][1])*10000)
         x_list10.append(dic)
 
     final = []
-    final.append(json.dumps(x_list1))
-    final.append(json.dumps(x_list2))
-    final.append(json.dumps(x_list3))
-    final.append(json.dumps(x_list4))
-    final.append(json.dumps(x_list5))
-    final.append(json.dumps(x_list6))
-    final.append(json.dumps(x_list7))
-    final.append(json.dumps(x_list8))
-    final.append(json.dumps(x_list9))
-    final.append(json.dumps(x_list10))
+    final.append(x_list1)
+    final.append(x_list2)
+    final.append(x_list3)
+    final.append(x_list4)
+    final.append(x_list5)
+    final.append(x_list6)
+    final.append(x_list7)
+    final.append(x_list8)
+    final.append(x_list9)
+    final.append(x_list10)
 
-    return render_template('tagcloud.html', datacloud1=final)
+    return render_template('tagcloud.html', datacloud1=json.dumps(final))
 
 
 @app.route('/tweetmap')
