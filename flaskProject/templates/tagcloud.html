@@ -29,7 +29,22 @@
 </head>
 
 <body class="">
+  <script type="text/javascript" src="{{ url_for('static', filename='jq/jqcloud.min.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='jq/script.js') }}" ></script>
+  <script>
+    function doSomething() {
+      var data1 = '{{datacloud|safe}}';
+      var words_data = $.parseJSON(data1);
+      $('#word_cloud').jQCloud(words_data, {
+           width: 400,
+           height: 200
+       });
+    }
+    window.onload=doSomething;
+      
+    </script>
     
+
   <div class="wrapper ">
     <div class="sidebar" data-color="white" data-active-color="danger">
       <div class="logo">
@@ -48,8 +63,8 @@
       </div>
       <div class="sidebar-wrapper">
         <ul class="nav">
-          <li class="active ">
-            <a href="javascript:;">
+          <li>
+            <a href="/">
               <i class="nc-icon nc-chart-pie-36"></i>
               <p>Sentiment Analysis</p>
             </a>
@@ -57,15 +72,13 @@
           
           <li>
             <a href="/topic">
-              <!-- <a href="/topicmodelling.html"></a> -->
               <i class="nc-icon nc-chart-bar-32"></i>
               <p>Topic Modelling</p>
             </a>
           </li>
 
-          <li>
-              <!-- <a href="javascript:;"> -->
-              <a href="/tagcloud">
+          <li class="active ">
+              <a href="javascript:;">
               <i class="nc-icon nc-caps-small"></i>
               <p>Tag Cloud</p>
             </a>
@@ -99,133 +112,27 @@
             <span class="navbar-toggler-bar navbar-kebab"></span>
             <span class="navbar-toggler-bar navbar-kebab"></span>
           </button>
-         
+        
         </div>
       </nav>
       <!-- End Navbar -->
       <div class="content">
 
         <div class="row">
-          <div class="col-lg-3 col-md-6 col-sm-6">
-            <div class="card card-stats">
-              <div class="card-body ">
-                <div class="row">
-                  <div class="col-5 col-md-4">
-                    <div class="icon-big text-center icon-warning">
-                      <i class="nc-icon nc-globe text-warning"></i>
-                    </div>
-                  </div>
-                  <div class="col-7 col-md-8">
-                    <div class="numbers">
-                      <p class="card-category">Total Tweets</p>
-                      <p class="card-title">+ {{total|safe}} K<p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="card-footer ">
-                <hr>
-                <div class="stats">
-                  <!-- <i class="fa fa-refresh"></i> -->
-                  <i class="fa fa-clock-o"></i>
-                  updated 12 hours ago
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-3 col-md-6 col-sm-6">
-            <div class="card card-stats">
-              <div class="card-body ">
-                <div class="row">
-                  <div class="col-5 col-md-4">
-                    <div class="icon-big text-center icon-warning">
-                      <i class="nc-icon nc-simple-add text-success"></i>
-                    </div>
-                  </div>
-                  <div class="col-7 col-md-8">
-                    <div class="numbers">
-                      <p class="card-category">Positive</p>
-                      <p class="card-title"> +{{pos|safe}} K<p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="card-footer ">
-                <hr>
-                <div class="stats">
-                  <!-- <i class="fa fa-calendar-o"></i> -->
-                  <i class="fa fa-clock-o"></i>
-                  updated 12 hours ago
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-3 col-md-6 col-sm-6">
-            <div class="card card-stats">
-              <div class="card-body ">
-                <div class="row">
-                  <div class="col-5 col-md-4">
-                    <div class="icon-big text-center icon-warning">
-                      <i class="nc-icon nc-simple-delete text-danger"></i>
-                    </div>
-                  </div>
-                  <div class="col-7 col-md-8">
-                    <div class="numbers">
-                      <p class="card-category">Negative</p>
-                      <p class="card-title">+{{neg|safe}} K<p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="card-footer ">
-                <hr>
-                <div class="stats">
-                  <i class="fa fa-clock-o"></i>
-                  updated 12 hours ago
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-3 col-md-6 col-sm-6">
-            <div class="card card-stats">
-              <div class="card-body ">
-                <div class="row">
-                  <div class="col-5 col-md-4">
-                    <div class="icon-big text-center icon-warning">
-                      <i class="nc-icon nc-favourite-28 text-primary"></i>
-                    </div>
-                  </div>
-                  <div class="col-7 col-md-8">
-                    <div class="numbers">
-                      <p class="card-category">Something</p>
-                      <p class="card-title">?<p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="card-footer ">
-                <hr>
-                <div class="stats">
-                  <!-- <i class="fa fa-refresh"></i> -->
-                  <i class="fa fa-clock-o"></i>
-                  updated 12 hours ago
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="row">
           <div class="col-md-12">
             <div class="card ">
               <div class="card-header ">
-                <h5 class="card-title">Sentiment Analysis</h5>
-                <p class="card-category">24 Hours performance</p>
+                <h5 class="card-title">Tag Cloud</h5>
+               
+                
               </div>
               <div class="card-body ">
+                <div id = "word_cloud">
+                 
+
+                </div>
                 <!-- <canvas id=chartHours width="400" height="100"></canvas> -->
-                {{ sent_div|safe }}
-                {{ sent_script|safe }}
+               
 
               </div>
               <div class="card-footer ">
@@ -237,10 +144,10 @@
             </div>
           </div>
         </div>
-        
 
       </div>
-      <footer class="footer footer-black ooter-white" style="position: absolute; bottom: 0; width: -webkit-fill-available;">
+
+      <footer class="footer footer-black footer-white" style="position: absolute; bottom: 0; width: -webkit-fill-available;">
         <div class="container-fluid">
           <div class="row">
             <nav class="footer-nav">
