@@ -220,14 +220,14 @@ def tagcloud():
         x_list1.append(dic)
 
     x_list2 =[]
-    for key in topics_100:
+    for key in topics_101:
         dic = {}
         dic["text"] = key
         dic["weight"] = int((topics_101[key][1])*1000)
         x_list2.append(dic)
 
     x_list3 =[]
-    for key in topics_100:
+    for key in topics_102:
         dic = {}
         dic["text"] = key
         dic["weight"] = int((topics_102[key][1])*1000)
