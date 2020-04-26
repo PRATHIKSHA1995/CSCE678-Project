@@ -11,9 +11,13 @@ from flask import Flask, render_template
 from bokeh.models.widgets import Tabs, Panel
 from bokeh.models import DatetimeTickFormatter
 from boto3.dynamodb.conditions import Key, Attr
+<<<<<<< HEAD
 from bokeh.models import ColumnDataSource, NumeralTickFormatter, HoverTool
 from bokeh.plotting import show, figure
 from bokeh.models import ColumnDataSource, LinearColorMapper, ColorBar, BasicTicker, PrintfTickFormatter, HoverTool
+=======
+from bokeh.models import ColumnDataSource, NumeralTickFormatter, HoverTool, LinearColorMapper, ColorBar, BasicTicker, PrintfTickFormatter
+>>>>>>> 4f28707f1fab8eb17770dbe06ac2744f17cddeed
 from bokeh.palettes import Viridis256
 from bokeh.transform import transform
 
@@ -28,6 +32,7 @@ def analytics():
     # total_number = int(response_tweet["total-tweet"]/1000)
 
     uniqueDates = set()
+<<<<<<< HEAD
     
     #dynamo historic-data
 
@@ -40,6 +45,11 @@ def analytics():
     # response = json.loads(data)
     #
 
+=======
+    dynamodb = boto3.resource('dynamodb', region_name='us-west-1')
+    table = dynamodb.Table('CSCE-678-Spark')
+    response = table.query(KeyConditionExpression=Key('key').eq('historic-tweet-per-day'))["Items"][0]
+>>>>>>> 4f28707f1fab8eb17770dbe06ac2744f17cddeed
     negativeTweets = json.loads(response["neg-tweet-dict"])
     positiveTweets = json.loads(response["pos-tweet-dict"])
 

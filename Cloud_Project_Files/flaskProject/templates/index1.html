@@ -1,0 +1,75 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <style>
+            #div1 {
+                display: inline-block;
+               
+            }
+            #div2 {
+                display: inline-block;
+            }
+        </style>
+        <title>COVID-19 Tweet Analysis</title>
+        <link href="http://cdn.pydata.org/bokeh/release/bokeh-2.0.2.min.css" rel="stylesheet">
+        <link href="http://cdn.pydata.org/bokeh/release/bokeh-widgets-2.0.2.min.css" rel="stylesheet">
+        <link href="bootstrap.min.css" rel="stylesheet">
+        <link href="light-bootstrap-dashboard.css">
+        <link rel="stylesheet" href="jqcloud.min.css">
+      
+        
+    </head>
+    <body>
+          
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script type="text/javascript" src="jqcloud.min.js"></script>
+        <script type="text/javascript" src="bootstrap.min.js"></script>
+        
+       
+       <script type="text/javascript" >
+            $(document).ready(function () {
+            var data_words = '{{data|safe}}';
+            
+            $.ajax({url: '/', success: function (data_words) {
+            var words_data = $.parseJSON(data_words);
+  
+            $('#word_cloud').jQCloud(words_data, {
+            width: 800,
+            height: 600
+   });
+}});
+});
+        
+        </script>
+
+
+        
+        <!-- <h1 style="text-align:center">COVID-19 Twitter Data Analysis Using Spark</h1> -->
+        <div>
+            <h2>Sentiment Analysis of Tweets</h2>
+            <div id="div1">
+                
+                {{ sent_div|safe }}
+                {{ sent_script|safe }}
+            </div>
+        
+        </div>
+
+       <div>
+        <h2>Topic Modelling </h2>
+        <h3> {{data|safe}} </h3>
+       </div>
+
+        <div id="word_cloud">
+           
+          
+  
+        </div>  
+        <script src="http://cdn.pydata.org/bokeh/release/bokeh-2.0.2.min.js"></script>
+        <script src="http://cdn.pydata.org/bokeh/release/bokeh-widgets-2.0.2.min.js"></script>
+       
+        
+    </body>
+</html>
