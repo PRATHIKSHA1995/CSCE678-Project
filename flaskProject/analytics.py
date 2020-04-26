@@ -101,16 +101,15 @@ def analytics():
 
     script, div = components(tabs)
 
-    #On OLD Data
+    #On New Data
     # ###########################################################################################################
     uniqueDates = set()
-    response = table.query(KeyConditionExpression=Key('key').eq('historic-tweet-per-day'))["Items"][0]    
-    
-    negativeTweets = json.loads(response["neg-tweet-dict"])
-    positiveTweets = json.loads(response["pos-tweet-dict"])
-    negativeTweetDates = set(negativeTweets.keys())
-    positiveTweetDates = set(positiveTweets.keys())
-    uniqueDates = list(negativeTweetDates.intersection(positiveTweets))
+    response = table.query(KeyConditionExpression=Key('key').eq('sentiment-analysis'))["Items"]
+    originalData = dict()
+    for item in response:
+        #item = json.loads(item)
+        originalData[item["date"]] = [int(item["pos-tweet"]),int(item["neg-tweet"])]
+    uniqueDates = list(originalData.keys())
     dateRanges = set()
     for date in uniqueDates:
         dt = datetime.strptime(date, '%Y-%m-%d')
@@ -130,12 +129,12 @@ def analytics():
         start = start.strftime('%Y-%m-%d')
         end = end.strftime('%Y-%m-%d')
         range = str(start) + " : " + str(end)
-        data["Positive"][dateRanges.index(range)] += positiveTweets[date]
-        data["Negative"][dateRanges.index(range)] += negativeTweets[date]
+        data["Positive"][dateRanges.index(range)] += originalData[date][0]
+        data["Negative"][dateRanges.index(range)] += originalData[date][1]
 
-    negative_number = int(sum(data['Negative'])/1000)
-    positive_number = int(sum(data['Positive'])/1000)
-    total_number = int(negative_number + positive_number)
+    today_negative_number = int(sum(data['Negative'])/1000)
+    today_positive_number = int(sum(data['Positive'])/1000)
+    today_total_number = int(negative_number + positive_number)
 
     source = ColumnDataSource(data=data)
     maxValue = max(max(data["Positive"]), max(data["Negative"]))
@@ -151,27 +150,31 @@ def analytics():
     p.xaxis.axis_label = "Week"
     p.yaxis[0].formatter = NumeralTickFormatter(format='0.0 a')
     p.add_tools(HoverTool(tooltips=[('Date Range', "@dateRanges"), ('No. of tweets', '$y{(0 a)}')], mode='vline'))
-   
+
     uniqueDates.sort()
     data2 = {"uniqueDates" : uniqueDates, "Positive" : [], "Negative": []}
     colors = bokeh.palettes.d3['Category10'][10]
     for date in uniqueDates:
-        data2["Positive"].append(positiveTweets[date])
-        data2["Negative"].append(negativeTweets[date])
+        data2["Positive"].append(originalData[date][0])
+        data2["Negative"].append(originalData[date][1])
     maxValue = max(max(data2["Positive"]), max(data2["Negative"]))
-    uniqueDates = [datetime.strptime(date, '%Y-%m-%d') for date in uniqueDates]
-    p2 = figure(y_range=(0, int(1.1 * maxValue)), x_axis_type='datetime', plot_height=400, plot_width=1300, title="No. of Positive & Negative tweets by day", toolbar_location=None, tools="")
-    p2.line(uniqueDates, data2["Positive"], legend="Positive", line_color=colors[2], line_width = 3, alpha=0.8)
-    p2.line(uniqueDates, data2["Negative"], legend="Negative", line_color=colors[1], line_width = 3, alpha=0.8)
+    source = ColumnDataSource(data=data2)
+    if len(uniqueDates):
+        p2 = figure(x_range=uniqueDates, y_range=(0, int(1.1 * maxValue)),  plot_height=400, plot_width=1300, title="No. of Positive & Negative tweets by day", toolbar_location=None, tools="")
+    else:
+        uniqueDates = [datetime.strptime(date, '%Y-%m-%d') for date in uniqueDates]
+        p2 = figure(y_range=(0, int(1.1 * maxValue)), x_axis_type='datetime', plot_height=600, plot_width=800, title="No. of Positive & Negative tweets by day", toolbar_location=None, tools="")
+        p2.xaxis.formatter = DatetimeTickFormatter(days=["%Y-%m-%d"])
+    p2.line(x="uniqueDates", y="Positive", legend_label="Positive", line_color=colors[2], line_width = 3, alpha=0.8, source=source)
+    p2.line(x="uniqueDates", y="Negative", legend_label="Negative", line_color=colors[1], line_width = 3, alpha=0.8, source=source)
     p2.legend.location = "top_left"
     p2.legend.orientation = "horizontal"
     p2.left[0].formatter.use_scientific = False
     p2.yaxis.axis_label = "No. of tweets"
     p2.xaxis.axis_label = "Date"
     p2.yaxis[0].formatter = NumeralTickFormatter(format='0 a')
-    p2.xaxis.formatter = DatetimeTickFormatter(days=["%Y-%m-%d"])
-    p2.add_tools(HoverTool(tooltips=[('Date', "$x{%F}"), ('No. of tweets', '$y{(0 a)}')], formatters={'$x': 'datetime'}, mode='vline'))
-    
+    p2.add_tools(HoverTool(tooltips=[('Date', "@uniqueDates"), ('No. of tweets', '$y{(0 a)}')], formatters={'$x': 'datetime'}, mode='vline'))
+
 
     day_panel = Panel(child=p2, title='Tweets by Day')
     week_panel = Panel(child=p, title='Tweets by Week')
@@ -184,8 +187,8 @@ def analytics():
 
 
     print(print(bokeh.__version__))
-   
-    return render_template('index.html', sent_div1=div, sent_script1=script, sent_div2=div2, sent_script2=script2,total=total_number,pos=positive_number,neg=negative_number)
+
+    return render_template('index.html', sent_div1=div, sent_script1=script, sent_div2=div2, sent_script2=script2,total=total_number,pos=positive_number,neg=negative_number, today=today_total_number)
 
 @app.route('/tagcloud')
 def tagcloud():
