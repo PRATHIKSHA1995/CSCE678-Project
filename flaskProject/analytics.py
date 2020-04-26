@@ -233,13 +233,68 @@ def tagcloud():
         dic["weight"] = int((topics_102[key][1])*1000)
         x_list3.append(dic)
 
-    # words_json = [{'text': word, 'weight': int(count*1000)} for word, count in topics_100.items()]  
+    x_list4 =[]
+    for key in topics_103:
+        dic = {}
+        dic["text"] = key
+        dic["weight"] = int((topics_103[key][1])*1000)
+        x_list4.append(dic)
 
-    trial_data1 = json.dumps(x_list1)
-    trial_data2 = json.dumps(x_list2)
-    trial_data3 = json.dumps(x_list3)
+    x_list5 =[]
+    for key in topics_104:
+        dic = {}
+        dic["text"] = key
+        dic["weight"] = int((topics_104[key][1])*1000)
+        x_list5.append(dic)
 
-    return render_template('tagcloud.html', datacloud1=trial_data1,datacloud2=trial_data1,datacloud3=trial_data1)
+    x_list6 =[]
+    for key in topics_105:
+        dic = {}
+        dic["text"] = key
+        dic["weight"] = int((topics_105[key][1])*1000)
+        x_list6.append(dic) 
+
+    x_list7 =[]
+    for key in topics_106:
+        dic = {}
+        dic["text"] = key
+        dic["weight"] = int((topics_106[key][1])*1000)
+        x_list7.append(dic)
+
+    x_list8 =[]
+    for key in topics_107:
+        dic = {}
+        dic["text"] = key
+        dic["weight"] = int((topics_107[key][1])*1000)
+        x_list8.append(dic)
+
+    x_list9 =[]
+    for key in topics_108:
+        dic = {}
+        dic["text"] = key
+        dic["weight"] = int((topics_108[key][1])*1000)
+        x_list9.append(dic)
+
+    x_list10 =[]
+    for key in topics_109:
+        dic = {}
+        dic["text"] = key
+        dic["weight"] = int((topics_109[key][1])*1000)
+        x_list10.append(dic)
+
+    final = []
+    final.append(json.dumps(x_list1))
+    final.append(json.dumps(x_list2))
+    final.append(json.dumps(x_list3))
+    final.append(json.dumps(x_list4))
+    final.append(json.dumps(x_list5))
+    final.append(json.dumps(x_list6))
+    final.append(json.dumps(x_list7))
+    final.append(json.dumps(x_list8))
+    final.append(json.dumps(x_list9))
+    final.append(json.dumps(x_list10))
+
+    return render_template('tagcloud.html', datacloud1=final)
 
 
 @app.route('/tweetmap')

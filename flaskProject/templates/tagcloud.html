@@ -34,26 +34,64 @@
   <script>
     function doSomething() {
 
-      var data1 = '{{datacloud1|safe}}';
-      var data2 = '{{datacloud2|safe}}';
-      var data3 = '{{datacloud3|safe}}';
+      var data = '{{datacloud1|safe}}';
 
-      var words_data1 = $.parseJSON(data1);
-      var words_data2 = $.parseJSON(data2);
-      var words_data3 = $.parseJSON(data3);
+      var words_data1 = $.parseJSON(data[0]);
+      var words_data2 = $.parseJSON(data[1]);
+      var words_data3 = $.parseJSON(data[2]);
+      var words_data4 = $.parseJSON(data[3]);
+      var words_data5 = $.parseJSON(data[4]);
+      var words_data6 = $.parseJSON(data[5]);
+      var words_data7 = $.parseJSON(data[6]);
+      var words_data8 = $.parseJSON(data[7]);
+      var words_data9 = $.parseJSON(data[8]);
+      var words_data10 = $.parseJSON(data[9]);
 
       $('#word_cloud1').jQCloud(words_data1, {
-           width: 700,
+           width: 600,
            height: 400
        });
 
       $('#word_cloud2').jQCloud(words_data2, {
-           width: 700,
+           width: 600,
            height: 400
        });
 
       $('#word_cloud3').jQCloud(words_data3, {
-           width: 700,
+           width: 600,
+           height: 400
+       });
+       $('#word_cloud4').jQCloud(words_data4, {
+           width: 600,
+           height: 400
+       });
+
+      $('#word_cloud5').jQCloud(words_data5, {
+           width: 600,
+           height: 400
+       });
+
+      $('#word_cloud6').jQCloud(words_data6, {
+           width: 600,
+           height: 400
+       });
+       $('#word_cloud7').jQCloud(words_data7, {
+           width: 600,
+           height: 400
+       });
+
+      $('#word_cloud8').jQCloud(words_data8, {
+           width: 600,
+           height: 400
+       });
+
+      $('#word_cloud9').jQCloud(words_data9, {
+           width: 600,
+           height: 400
+       });
+
+       $('#word_cloud10').jQCloud(words_data10, {
+           width: 600,
            height: 400
        });
     }
@@ -185,6 +223,104 @@
                   </div>
 
                 </div>
+
+                <div class = "row">
+                    <div class = "col-md-4">
+  
+                      <div class = "card card-plain" >
+                        <div class = "card-body">
+  
+                          <div id = "word_cloud4">
+  
+                          </div>
+  
+                        </div>
+                      </div>
+                    </div>
+  
+                    <div class = "col-md-4">
+  
+                      <div class = "card card-plain" >
+                        <div class = "card-body">
+  
+                          <div id = "word_cloud5">
+  
+                          </div>
+  
+                        </div>
+                      </div>
+                    </div>
+  
+                    <div class = "col-md-4">
+  
+                      <div class = "card card-plain" >
+                        <div class = "card-body">
+  
+                          <div id = "word_cloud6">
+  
+                          </div>
+  
+                        </div>
+                      </div>
+                    </div>
+  
+                  </div>
+
+                  <div class = "row">
+                      <div class = "col-md-4">
+    
+                        <div class = "card card-plain" >
+                          <div class = "card-body">
+    
+                            <div id = "word_cloud7">
+    
+                            </div>
+    
+                          </div>
+                        </div>
+                      </div>
+    
+                      <div class = "col-md-4">
+    
+                        <div class = "card card-plain" >
+                          <div class = "card-body">
+    
+                            <div id = "word_cloud8">
+    
+                            </div>
+    
+                          </div>
+                        </div>
+                      </div>
+    
+                      <div class = "col-md-4">
+    
+                        <div class = "card card-plain" >
+                          <div class = "card-body">
+    
+                            <div id = "word_cloud9">
+    
+                            </div>
+    
+                          </div>
+                        </div>
+                      </div>
+    
+                    </div>
+                    <div class = "row">
+                        <div class = "col-md-4">
+      
+                          <div class = "card card-plain" >
+                            <div class = "card-body">
+      
+                              <div id = "word_cloud10">
+      
+                              </div>
+      
+                            </div>
+                          </div>
+                        </div>
+                      </div>
 
                 <!-- <div id = "word_cloud">
                 </div> -->
