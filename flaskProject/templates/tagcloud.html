@@ -33,11 +33,28 @@
   <script type="text/javascript" src="{{ url_for('static', filename='jq/script.js') }}" ></script>
   <script>
     function doSomething() {
-      var data1 = '{{datacloud|safe}}';
-      var words_data = $.parseJSON(data1);
-      $('#word_cloud').jQCloud(words_data, {
-           width: 400,
-           height: 200
+
+      var data1 = '{{datacloud1|safe}}';
+      var data2 = '{{datacloud2|safe}}';
+      var data3 = '{{datacloud3|safe}}';
+
+      var words_data1 = $.parseJSON(data1);
+      var words_data2 = $.parseJSON(data2);
+      var words_data3 = $.parseJSON(data3);
+
+      $('#word_cloud1').jQCloud(words_data1, {
+           width: 700,
+           height: 400
+       });
+
+      $('#word_cloud2').jQCloud(words_data2, {
+           width: 700,
+           height: 400
+       });
+
+      $('#word_cloud3').jQCloud(words_data3, {
+           width: 700,
+           height: 400
        });
     }
     window.onload=doSomething;
@@ -127,14 +144,53 @@
                 
               </div>
               <div class="card-body ">
-                <div id = "word_cloud">
-                 
+                <div class = "row">
+                  <div class = "col-md-4">
+
+                    <div class = "card card-plain" >
+                      <div class = "card-body">
+
+                        <div id = "word_cloud1">
+
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class = "col-md-4">
+
+                    <div class = "card card-plain" >
+                      <div class = "card-body">
+
+                        <div id = "word_cloud2">
+
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class = "col-md-4">
+
+                    <div class = "card card-plain" >
+                      <div class = "card-body">
+
+                        <div id = "word_cloud3">
+
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
 
                 </div>
-                <!-- <canvas id=chartHours width="400" height="100"></canvas> -->
-               
 
+                <!-- <div id = "word_cloud">
+                </div> -->
               </div>
+
+
               <div class="card-footer ">
                 <hr>
                 <div class="stats">
