@@ -67,14 +67,14 @@
               <!-- <a href="javascript:;"> -->
               <a href="/tagcloud">
               <i class="nc-icon nc-caps-small"></i>
-              <p>Tag Cloud</p>
+              <p>Topic Cloud</p>
             </a>
           </li>
 
           <li>
             <a href="/tweetmap">
-              <i class="nc-icon nc-pin-3"></i>
-              <p>Tweet Map</p>
+              <i class="nc-icon nc-diamond"></i>
+              <p>Top Influential Users</p>
             </a>
           </li>
         </ul>
@@ -224,8 +224,31 @@
               </div>
               <div class="card-body ">
                 <!-- <canvas id=chartHours width="400" height="100"></canvas> -->
-                {{ sent_div|safe }}
-                {{ sent_script|safe }}
+                {{ sent_div1|safe }}
+                {{ sent_script1|safe }}
+
+              </div>
+              <div class="card-footer ">
+                <hr>
+                <div class="stats">
+                  <i class="fa fa-history"></i> Updated 12 hours ago
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-12">
+            <div class="card ">
+              <div class="card-header ">
+                <h5 class="card-title">Analytics on Previous Data</h5>
+                
+              </div>
+              <div class="card-body ">
+                <!-- <canvas id=chartHours width="400" height="100"></canvas> -->
+                {{ sent_div2|safe }}
+                {{ sent_script2|safe }}
 
               </div>
               <div class="card-footer ">

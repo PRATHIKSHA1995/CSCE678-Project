@@ -21,28 +21,15 @@ app = Flask(__name__)
 
 @app.route('/')
 def analytics():
-    # tweetsdata = r'{ "key": "sentiment-analysis", "neg-tweet": 3471444,"pos-tweet": 2703493,"total-tweet": 6174937 }'
-    # response_tweet = json.loads(tweetsdata)
-    # negative_number = int((response_tweet["neg-tweet"])/1000)
-    # positive_number = int(response_tweet["pos-tweet"]/1000)
-    # total_number = int(response_tweet["total-tweet"]/1000)
 
     uniqueDates = set()
-    
-    #dynamo historic-data
-
     dynamodb = boto3.resource('dynamodb', region_name='us-west-1')
     table = dynamodb.Table('CSCE-678-Spark')
-    response = table.query(KeyConditionExpression=Key('key').eq('historic-tweet-per-day'))["Items"][0]
 
-    #hard code
-    # data = r'{"key": "tweet-per-day", "neg-tweet-dict": "{\"2020-01-01\": 1, \"2020-03-04\": 4002, \"2020-03-05\": 8565, \"2020-03-06\": 6041, \"2020-03-07\": 4289, \"2020-03-08\": 4646, \"2020-03-09\": 21571, \"2020-03-10\": 57852, \"2020-03-11\": 88582, \"2020-03-12\": 158964, \"2020-03-13\": 313172, \"2020-03-14\": 136906, \"2020-03-15\": 144542, \"2020-03-16\": 183077, \"2020-03-17\": 245444, \"2020-03-18\": 186269, \"2020-03-19\": 247309, \"2020-03-20\": 224201, \"2020-03-22\": 207665, \"2020-03-23\": 206541, \"2020-03-24\": 192129, \"2020-03-25\": 199055, \"2020-03-26\": 263159, \"2020-03-27\": 200620, \"2020-03-28\": 166696}", "pos-tweet-dict": "{\"2020-03-04\": 2181, \"2020-03-05\": 4631, \"2020-03-06\": 3185, \"2020-03-07\": 2156, \"2020-03-08\": 2234, \"2020-03-09\": 11927, \"2020-03-10\": 38074, \"2020-03-11\": 59874, \"2020-03-12\": 100749, \"2020-03-13\": 216857, \"2020-03-14\": 104157, \"2020-03-15\": 108065, \"2020-03-16\": 137122, \"2020-03-17\": 191355, \"2020-03-18\": 138963, \"2020-03-19\": 196065, \"2020-03-20\": 182670, \"2020-03-22\": 181811, \"2020-03-23\": 166500, \"2020-03-24\": 152874, \"2020-03-25\": 175823, \"2020-03-26\": 224450, \"2020-03-27\": 167803, \"2020-03-28\": 133945}"}'
-    # response = json.loads(data)
-    #
-
+    response = table.query(KeyConditionExpression=Key('key').eq('historic-tweet-per-day'))["Items"][0]    
+    
     negativeTweets = json.loads(response["neg-tweet-dict"])
     positiveTweets = json.loads(response["pos-tweet-dict"])
-
     negativeTweetDates = set(negativeTweets.keys())
     positiveTweetDates = set(positiveTweets.keys())
     uniqueDates = list(negativeTweetDates.intersection(positiveTweets))
@@ -74,7 +61,7 @@ def analytics():
 
     source = ColumnDataSource(data=data)
     maxValue = max(max(data["Positive"]), max(data["Negative"]))
-    p = figure(x_range=dateRanges, y_range=(0, int(1.1 * maxValue)), plot_height=400, plot_width=800, title="No. of Positive & Negative tweets by week", toolbar_location=None, tools="")
+    p = figure(x_range=dateRanges, y_range=(0, int(1.1 * maxValue)), plot_height=400, plot_width=1300, title="No. of Positive & Negative tweets by week", toolbar_location=None, tools="")
     p.vbar(x=dodge("dateRanges", -0.25, range=p.x_range), top="Positive", width=0.2, source=source, color="#718dbf", legend_label="Positive")
     p.vbar(x=dodge("dateRanges", 0.0, range=p.x_range), top="Negative", width=0.2, source=source, color="#e84d60", legend_label="Negative")
     p.x_range.range_padding = 0.1
@@ -86,10 +73,7 @@ def analytics():
     p.xaxis.axis_label = "Week"
     p.yaxis[0].formatter = NumeralTickFormatter(format='0.0 a')
     p.add_tools(HoverTool(tooltips=[('Date Range', "@dateRanges"), ('No. of tweets', '$y{(0 a)}')], mode='vline'))
-    
-    # script, div = components(p)
-    
-
+   
     uniqueDates.sort()
     data2 = {"uniqueDates" : uniqueDates, "Positive" : [], "Negative": []}
     colors = bokeh.palettes.d3['Category10'][10]
@@ -98,7 +82,7 @@ def analytics():
         data2["Negative"].append(negativeTweets[date])
     maxValue = max(max(data2["Positive"]), max(data2["Negative"]))
     uniqueDates = [datetime.strptime(date, '%Y-%m-%d') for date in uniqueDates]
-    p2 = figure(y_range=(0, int(1.1 * maxValue)), x_axis_type='datetime', plot_height=400, plot_width=800, title="No. of Positive & Negative tweets by day", toolbar_location=None, tools="")
+    p2 = figure(y_range=(0, int(1.1 * maxValue)), x_axis_type='datetime', plot_height=400, plot_width=1300, title="No. of Positive & Negative tweets by day", toolbar_location=None, tools="")
     p2.line(uniqueDates, data2["Positive"], legend="Positive", line_color=colors[2], line_width = 3, alpha=0.8)
     p2.line(uniqueDates, data2["Negative"], legend="Negative", line_color=colors[1], line_width = 3, alpha=0.8)
     p2.legend.location = "top_left"
@@ -110,9 +94,6 @@ def analytics():
     p2.xaxis.formatter = DatetimeTickFormatter(days=["%Y-%m-%d"])
     p2.add_tools(HoverTool(tooltips=[('Date', "$x{%F}"), ('No. of tweets', '$y{(0 a)}')], formatters={'$x': 'datetime'}, mode='vline'))
     
-    # script2, div2 = components(p2)
-   
-
 
     day_panel = Panel(child=p2, title='Tweets by Day')
     week_panel = Panel(child=p, title='Tweets by Week')
@@ -120,9 +101,91 @@ def analytics():
 
     script, div = components(tabs)
 
+    #On OLD Data
+    # ###########################################################################################################
+    uniqueDates = set()
+    response = table.query(KeyConditionExpression=Key('key').eq('historic-tweet-per-day'))["Items"][0]    
+    
+    negativeTweets = json.loads(response["neg-tweet-dict"])
+    positiveTweets = json.loads(response["pos-tweet-dict"])
+    negativeTweetDates = set(negativeTweets.keys())
+    positiveTweetDates = set(positiveTweets.keys())
+    uniqueDates = list(negativeTweetDates.intersection(positiveTweets))
+    dateRanges = set()
+    for date in uniqueDates:
+        dt = datetime.strptime(date, '%Y-%m-%d')
+        start = dt - timedelta(days=dt.weekday())
+        end = start + timedelta(days=6)
+        start = start.strftime('%Y-%m-%d')
+        end = end.strftime('%Y-%m-%d')
+        range = str(start) + " : " + str(end)
+        dateRanges.add(range)
+    dateRanges = list(dateRanges)
+    dateRanges.sort()
+    data = {"dateRanges" : dateRanges, "Positive" : len(dateRanges) * [0], "Negative": len(dateRanges) * [0]}
+    for date in uniqueDates:
+        dt = datetime.strptime(date, '%Y-%m-%d')
+        start = dt - timedelta(days=dt.weekday())
+        end = start + timedelta(days=6)
+        start = start.strftime('%Y-%m-%d')
+        end = end.strftime('%Y-%m-%d')
+        range = str(start) + " : " + str(end)
+        data["Positive"][dateRanges.index(range)] += positiveTweets[date]
+        data["Negative"][dateRanges.index(range)] += negativeTweets[date]
+
+    negative_number = int(sum(data['Negative'])/1000)
+    positive_number = int(sum(data['Positive'])/1000)
+    total_number = int(negative_number + positive_number)
+
+    source = ColumnDataSource(data=data)
+    maxValue = max(max(data["Positive"]), max(data["Negative"]))
+    p = figure(x_range=dateRanges, y_range=(0, int(1.1 * maxValue)), plot_height=400, plot_width=1300, title="No. of Positive & Negative tweets by week", toolbar_location=None, tools="")
+    p.vbar(x=dodge("dateRanges", -0.25, range=p.x_range), top="Positive", width=0.2, source=source, color="#718dbf", legend_label="Positive")
+    p.vbar(x=dodge("dateRanges", 0.0, range=p.x_range), top="Negative", width=0.2, source=source, color="#e84d60", legend_label="Negative")
+    p.x_range.range_padding = 0.1
+    p.xgrid.grid_line_color = None
+    p.legend.location = "top_left"
+    p.legend.orientation = "horizontal"
+    p.left[0].formatter.use_scientific = False
+    p.yaxis.axis_label = "No. of tweets"
+    p.xaxis.axis_label = "Week"
+    p.yaxis[0].formatter = NumeralTickFormatter(format='0.0 a')
+    p.add_tools(HoverTool(tooltips=[('Date Range', "@dateRanges"), ('No. of tweets', '$y{(0 a)}')], mode='vline'))
+   
+    uniqueDates.sort()
+    data2 = {"uniqueDates" : uniqueDates, "Positive" : [], "Negative": []}
+    colors = bokeh.palettes.d3['Category10'][10]
+    for date in uniqueDates:
+        data2["Positive"].append(positiveTweets[date])
+        data2["Negative"].append(negativeTweets[date])
+    maxValue = max(max(data2["Positive"]), max(data2["Negative"]))
+    uniqueDates = [datetime.strptime(date, '%Y-%m-%d') for date in uniqueDates]
+    p2 = figure(y_range=(0, int(1.1 * maxValue)), x_axis_type='datetime', plot_height=400, plot_width=1300, title="No. of Positive & Negative tweets by day", toolbar_location=None, tools="")
+    p2.line(uniqueDates, data2["Positive"], legend="Positive", line_color=colors[2], line_width = 3, alpha=0.8)
+    p2.line(uniqueDates, data2["Negative"], legend="Negative", line_color=colors[1], line_width = 3, alpha=0.8)
+    p2.legend.location = "top_left"
+    p2.legend.orientation = "horizontal"
+    p2.left[0].formatter.use_scientific = False
+    p2.yaxis.axis_label = "No. of tweets"
+    p2.xaxis.axis_label = "Date"
+    p2.yaxis[0].formatter = NumeralTickFormatter(format='0 a')
+    p2.xaxis.formatter = DatetimeTickFormatter(days=["%Y-%m-%d"])
+    p2.add_tools(HoverTool(tooltips=[('Date', "$x{%F}"), ('No. of tweets', '$y{(0 a)}')], formatters={'$x': 'datetime'}, mode='vline'))
+    
+
+    day_panel = Panel(child=p2, title='Tweets by Day')
+    week_panel = Panel(child=p, title='Tweets by Week')
+    tabs = Tabs(tabs=[day_panel, week_panel])
+
+    script2, div2 = components(tabs)
+
+
+
+
+
     print(print(bokeh.__version__))
-    # return render_template('index.html', sent_div=div, sent_script=script, sent_div2=div2, sent_script2=script2, data="")
-    return render_template('index.html', sent_div=div, sent_script=script,total=total_number,pos=positive_number,neg=negative_number)
+   
+    return render_template('index.html', sent_div1=div, sent_script1=script, sent_div2=div2, sent_script2=script2,total=total_number,pos=positive_number,neg=negative_number)
 
 @app.route('/tagcloud')
 def tagcloud():
@@ -197,7 +260,7 @@ def topic():
     zipped.sort()
     data3["frequencies"], data3["weights"], data3["words"], data3["scaled"], data3["topic"] = zip(*zipped)
     source = ColumnDataSource(data=data3)
-    p3 = figure(x_range = (0, max(data3["frequencies"])), y_range = data3["words"], plot_height=600, plot_width=900)
+    p3 = figure(x_range = (0, max(data3["frequencies"])), y_range = data3["words"], plot_height=600,plot_width=1300)
     color_mapper = LinearColorMapper(palette = Viridis256, low = min(data3["weights"]), high = max(data3["weights"]))
     color_bar = ColorBar(color_mapper = color_mapper, location = (0, 0),ticker = BasicTicker())
     p3.add_layout(color_bar, 'right')
