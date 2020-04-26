@@ -122,7 +122,7 @@ def analytics():
 
     print(print(bokeh.__version__))
     # return render_template('index.html', sent_div=div, sent_script=script, sent_div2=div2, sent_script2=script2, data="")
-    return render_template('index.html', sent_div=div, sent_script=script, data=trial_data,total=total_number,pos=positive_number,neg=negative_number)
+    return render_template('index.html', sent_div=div, sent_script=script,total=total_number,pos=positive_number,neg=negative_number)
 
 @app.route('/tagcloud')
 def tagcloud():
