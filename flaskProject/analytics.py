@@ -134,7 +134,7 @@ def analytics():
 
     today_negative_number = int(sum(data['Negative'])/1000)
     today_positive_number = int(sum(data['Positive'])/1000)
-    today_total_number = int(negative_number + positive_number)
+    today_total_number = int(today_negative_number + today_positive_number)
 
     source = ColumnDataSource(data=data)
     maxValue = max(max(data["Positive"]), max(data["Negative"]))
