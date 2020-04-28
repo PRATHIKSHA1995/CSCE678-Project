@@ -1,0 +1,12 @@
+#!/bin/bash
+# EMR Bootstrap 
+
+sudo sed -i -e '$a\export PYSPARK_PYTHON=/usr/bin/python3' /etc/spark/conf/spark-env.sh
+sudo python3.6 -m pip install --upgrade pip
+python3 -V
+sudo python3 -m nltk.downloader -d /usr/local/share/nltk_data vader_lexicon
+sudo python3 -m nltk.downloader -d /usr/local/share/nltk_data stopwords
+sudo /usr/local/bin/pip3 install boto3
+sudo /usr/local/bin/pip3 install tweepy
+sudo /usr/local/bin/pip3 install pandas
+sudo /usr/local/bin/pip3 install graphframes
